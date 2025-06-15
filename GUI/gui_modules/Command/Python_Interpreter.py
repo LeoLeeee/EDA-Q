@@ -1,70 +1,13 @@
 import sys
-from PyQt5.QtWidgets import (
-    QApplication, QPlainTextEdit, QCompleter, QListView)
+from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QCompleter
 from PyQt5.QtCore import Qt, QEvent, QStringListModel, pyqtSignal
-from PyQt5.QtGui import (QTextCursor, QFont, QSyntaxHighlighter,
-                         QTextCharFormat, QColor)
+from PyQt5.QtGui import QTextCursor, QFont, QSyntaxHighlighter, QTextCharFormat, QColor
 from PyQt5.QtCore import QRegularExpression, QRect
 import io
 import contextlib
 from collections import deque
 import builtins
-
 from code import InteractiveInterpreter
-
-
-class CompleterPopup(QListView):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def keyPressEvent(self, e):
-        print("OK")
-        return super().keyPressEvent(e)
-
-    def currentChanged(self, current, previous):
-        print("IN")
-        return super().currentChanged(current, previous)
-
-
-class PythonCompleter(QCompleter):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-        self.setCaseSensitivity(Qt.CaseSensitive)
-        self.setCompletionMode(QCompleter.PopupCompletion)
-        self.completion_model = QStringListModel()
-        self.setModel(self.completion_model)
-        self.update_completion_context()
-
-        self.popup_widget = CompleterPopup()
-        self.setPopup(self.popup_widget)
-
-    def update_completion_context(self):
-        builtin_items = dir(builtins)
-        all_items = list(set(builtin_items))
-        self.completion_model.setStringList(all_items)
-
-    def triggerCompletion(self, word: str, rect: QRect):
-        # TODO:processing . expression
-        # if '.' in line_text[:cursor_pos]:
-        #     parts = line_text[:cursor_pos].rsplit('.', 1)
-        #     base = parts[0]
-        #     try:
-        #         obj = eval(base, globals())
-        #         members = [m for m in dir(obj) if not m.startswith('_')]
-        #         self.completion_model.setStringList(members)
-        #         self.completer.setCompletionPrefix(parts[-1])
-        #         cr = self.console.cursorRect()
-        #         cr.setWidth(self.completer.popup().sizeHintForColumn(0)
-        #                     + self.completer.popup().verticalScrollBar().sizeHint().width())
-        #         self.completer.complete(cr)
-        #         return
-        #     except:
-        #         pass
-
-        self.setCompletionPrefix(word)
-        rect.setWidth(200)
-        self.complete(rect)
 
 
 class PythonHighlighter(QSyntaxHighlighter):
@@ -146,6 +89,63 @@ class PythonHighlighter(QSyntaxHighlighter):
                                QTextCharFormat().setForeground(QColor(163, 21, 21)))
 
 
+class PythonCompleter(QCompleter):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setCaseSensitivity(Qt.CaseSensitive)
+        self.setCompletionMode(QCompleter.PopupCompletion)
+        self.completion_model = QStringListModel()
+        self.setModel(self.completion_model)
+        self.update_completion_context()
+        self.installEventFilter(self)
+
+    def update_completion_context(self):
+        builtin_items = dir(builtins)
+        all_items = list(set(builtin_items))
+        self.completion_model.setStringList(all_items)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.KeyPress:
+            if self.popup() and self.popup().isVisible():
+                pressed_key = event.key()
+                if pressed_key == Qt.Key_Escape:
+                    self.popup().hide()
+                    return True
+                elif pressed_key == Qt.Key_Return or pressed_key == Qt.Key_Enter or pressed_key == Qt.Key_Tab:
+                    complete_str = self.popup().model().data(self.popup().currentIndex())
+                    if complete_str:
+                        self.activated.emit(complete_str)
+                    self.popup().hide()
+                    return True
+        return super().eventFilter(obj, event)
+
+    def triggerCompletion(self, word: str, rect: QRect):
+        # TODO:processing . expression
+        # if '.' in line_text[:cursor_pos]:
+        #     parts = line_text[:cursor_pos].rsplit('.', 1)
+        #     base = parts[0]
+        #     try:
+        #         obj = eval(base, globals())
+        #         members = [m for m in dir(obj) if not m.startswith('_')]
+        #         self.completion_model.setStringList(members)
+        #         self.completer.setCompletionPrefix(parts[-1])
+        #         cr = self.console.cursorRect()
+        #         cr.setWidth(self.completer.popup().sizeHintForColumn(0)
+        #                     + self.completer.popup().verticalScrollBar().sizeHint().width())
+        #         self.completer.complete(cr)
+        #         return
+        #     except:
+        #         pass
+
+        self.setCompletionPrefix(word)
+        rect.setWidth(200)
+        # highlight firt complete item
+        # self.popup().setWindowFlag(Qt.Widget)
+        self.popup().setCurrentIndex(self.popup().model().index(0, 0))
+        self.complete(rect)
+
+
 class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
     """
     Python interpreter widget
@@ -158,7 +158,7 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
 
     def __init__(self, parent=None):
         QPlainTextEdit.__init__(self, parent)
-        InteractiveInterpreter.__init__(self, globals())
+        InteractiveInterpreter.__init__(self)
 
         self._resetbuffer()
         self.history = deque(maxlen=1000)
@@ -166,7 +166,6 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
         self.buffer = []  # buffer for unfinished cmd
         self.prompt_pos = -1
         self.more = False  # tag for need more cmd
-        self.has_completed = False  # TODO: delete this
 
         self.highlighter = PythonHighlighter(self.document())
         self.completer = PythonCompleter(self)
@@ -214,11 +213,10 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
     def handleInsertCompletion(self, completion):
         """Insert completion."""
         cursor = self.textCursor()
-        cursor.setPosition(self.prompt_pos, QTextCursor.KeepAnchor)
+        cursor.movePosition(
+            QTextCursor.MoveOperation.WordLeft, QTextCursor.KeepAnchor)
         cursor.removeSelectedText()
         cursor.insertText(completion, self.textCursor().charFormat())
-        self.moveCursor(QTextCursor.End)
-        self.completer.popup().hide()
 
     def eventFilter(self, obj, event):
         """Process keyboard events"""
@@ -258,8 +256,6 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
 
         return super().eventFilter(obj, event)
 
-    # def insertFromMimeData(self, source):
-    #     self.insertPlainText(source.text())
     def _resetbuffer(self):
         """Reset the input buffer."""
         self.buffer = []
