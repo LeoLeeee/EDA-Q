@@ -1,13 +1,13 @@
 import sys
-import re
-from PyQt5.QtWidgets import (QApplication, QTextEdit)
-from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import (QTextCursor, QFont, QSyntaxHighlighter,
-                         QTextCharFormat, QColor, QFontMetrics)
-from PyQt5.QtCore import QRegularExpression
+from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QCompleter
+from PyQt5.QtCore import Qt, QEvent, QStringListModel, pyqtSignal
+from PyQt5.QtGui import QTextCursor, QFont, QSyntaxHighlighter, QTextCharFormat, QColor
+from PyQt5.QtCore import QRegularExpression, QRect
 import io
 import contextlib
-from codeop import CommandCompiler
+from collections import deque
+import builtins
+from code import InteractiveInterpreter
 
 
 class PythonHighlighter(QSyntaxHighlighter):
@@ -89,64 +89,185 @@ class PythonHighlighter(QSyntaxHighlighter):
                                QTextCharFormat().setForeground(QColor(163, 21, 21)))
 
 
-class PythonInterpreter(QTextEdit):
+class PythonCompleter(QCompleter):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.compiler = CommandCompiler()
-        self.history = []
-        self.history_index = -1
-        self.current_code = ""
-        self.pending_code = ""
-        self.prompt = ">>> "
+
+        self.setCaseSensitivity(Qt.CaseSensitive)
+        self.setCompletionMode(QCompleter.PopupCompletion)
+        self.completion_model = QStringListModel()
+        self.setModel(self.completion_model)
+        self.update_completion_context()
+        self.installEventFilter(self)
+
+    def update_completion_context(self):
+        builtin_items = dir(builtins)
+        all_items = list(set(builtin_items))
+        self.completion_model.setStringList(all_items)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.KeyPress:
+            if self.popup() and self.popup().isVisible():
+                pressed_key = event.key()
+                if pressed_key == Qt.Key_Escape:
+                    self.popup().hide()
+                    return True
+                elif pressed_key == Qt.Key_Return or pressed_key == Qt.Key_Enter or pressed_key == Qt.Key_Tab:
+                    complete_str = self.popup().model().data(self.popup().currentIndex())
+                    if complete_str:
+                        self.activated.emit(complete_str)
+                    self.popup().hide()
+                    return True
+        return super().eventFilter(obj, event)
+
+    def triggerCompletion(self, word: str, rect: QRect):
+        # TODO:processing . expression
+        # if '.' in line_text[:cursor_pos]:
+        #     parts = line_text[:cursor_pos].rsplit('.', 1)
+        #     base = parts[0]
+        #     try:
+        #         obj = eval(base, globals())
+        #         members = [m for m in dir(obj) if not m.startswith('_')]
+        #         self.completion_model.setStringList(members)
+        #         self.completer.setCompletionPrefix(parts[-1])
+        #         cr = self.console.cursorRect()
+        #         cr.setWidth(self.completer.popup().sizeHintForColumn(0)
+        #                     + self.completer.popup().verticalScrollBar().sizeHint().width())
+        #         self.completer.complete(cr)
+        #         return
+        #     except:
+        #         pass
+
+        self.setCompletionPrefix(word)
+        rect.setWidth(200)
+        # highlight firt complete item
+        # self.popup().setWindowFlag(Qt.Widget)
+        self.popup().setCurrentIndex(self.popup().model().index(0, 0))
+        self.complete(rect)
+
+
+class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
+    """
+    Python interpreter widget
+    """
+    prompt = ">>> "
+    continue_prompt = "... "
+    prompt_len = len(prompt)
+
+    triggerComplete = pyqtSignal(str, QRect)
+
+    def __init__(self, parent=None):
+        QPlainTextEdit.__init__(self, parent)
+        InteractiveInterpreter.__init__(self)
+
+        self._resetbuffer()
+        self.history = deque(maxlen=1000)
+        self.history_index = None
+        self.buffer = []  # buffer for unfinished cmd
+        self.prompt_pos = -1
+        self.more = False  # tag for need more cmd
+
+        self.highlighter = PythonHighlighter(self.document())
+        self.completer = PythonCompleter(self)
+        self.completer.setWidget(self)
+
         self.initUI()
 
+        # ready and print welcome message
+        self.write_output(
+            f"Python {sys.version} on {sys.platform}\nWelcome to EDA-Q\n")
+        self.write_prompt()
+
     def initUI(self):
-        self.setCursorWidth(20)
+        # set self
+        self.setCursorWidth(12)
         self.setFont(QFont('Courier New', 12))
         self.setReadOnly(False)
         self.installEventFilter(self)
 
-        # welcome message
-        self.write_output("Welcome to EDA-Q\n")
-        self.write_prompt()
+        self.cursorPositionChanged.connect(self.handleCursorPositionChanged)
+        self.textChanged.connect(self.handleTextChanged)
+        self.triggerComplete.connect(self.completer.triggerCompletion)
+        self.completer.activated.connect(self.handleInsertCompletion)
+
+    def handleCursorPositionChanged(self):
+        """Handle cursor position always after prompt."""
+        cursor = self.textCursor()
+        cursor_pos = cursor.position()
+        if cursor_pos < self.prompt_pos:
+            cursor.setPosition(self.prompt_pos, QTextCursor.KeepAnchor if cursor.hasSelection(
+            ) else QTextCursor.MoveAnchor)
+            self.setTextCursor(cursor)
+
+        self.ensureCursorVisible()
+
+    def handleTextChanged(self):
+        """Handle text changed."""
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.WordLeft,
+                            QTextCursor.MoveMode.KeepAnchor)
+        last_word = cursor.selectedText()
+        cursor_rect = self.cursorRect()
+        self.triggerComplete.emit(last_word, cursor_rect)
+
+    def handleInsertCompletion(self, completion):
+        """Insert completion."""
+        cursor = self.textCursor()
+        cursor.movePosition(
+            QTextCursor.MoveOperation.WordLeft, QTextCursor.KeepAnchor)
+        cursor.removeSelectedText()
+        cursor.insertText(completion, self.textCursor().charFormat())
 
     def eventFilter(self, obj, event):
-        # process keyboard events
-        if obj == self and event.type() == QEvent.KeyPress:
+        """Process keyboard events"""
+        if obj == self:
             cursor = self.textCursor()
+            cursor_pos = cursor.position()
+            prompt_pos = self.prompt_pos
+            if event.type() == QEvent.KeyPress:
+                press_key = event.key()
+                # only last line can be edited
+                if cursor.hasSelection() or cursor_pos < prompt_pos:
+                    return True
 
-            # only last line can be edited
-            if cursor.hasSelection() or cursor.position() < self.get_prompt_position():
-                return True
-            
-            # don't allow backspace before prompt
-            if event.key() == Qt.Key_Backspace and cursor.position() <= self.get_prompt_position():
-                return True
+                # don't allow backspace before prompt
+                if press_key == Qt.Key_Backspace and cursor_pos <= prompt_pos:
+                    return True
 
-            # enter is pressed
-            if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-                self.execute_command()
-                return True
+                # enter is pressed
+                if press_key == Qt.Key_Return or press_key == Qt.Key_Enter:
+                    self.execute_command()
+                    return True
 
-            # up arrow is pressed, get history command
-            elif event.key() == Qt.Key_Up:
-                self.navigate_history(Qt.Key_Up)
-                return True
+                # up arrow is pressed, get history command
+                elif press_key == Qt.Key_Up:
+                    self.navigate_history(Qt.Key_Up)
+                    return True
 
-            # down arrow is pressed, get history command
-            elif event.key() == Qt.Key_Down:
-                self.navigate_history(Qt.Key_Down)
-                return True
+                # down arrow is pressed, get history command
+                elif press_key == Qt.Key_Down:
+                    self.navigate_history(Qt.Key_Down)
+                    return True
 
-            # swap tab with 4 spaces
-            elif event.key() == Qt.Key_Tab:
-                cursor.insertText("    ")
-                return True
+                # swap tab with 4 spaces
+                elif press_key == Qt.Key_Tab:
+                    cursor.insertText("    ")
+                    return True
 
         return super().eventFilter(obj, event)
-    
-    def insertFromMimeData(self, source):
-        self.insertPlainText(source.text())
+
+    def _resetbuffer(self):
+        """Reset the input buffer."""
+        self.buffer = []
+
+    def push(self, line):
+        """Push a line to the interpreter"""
+        self.buffer.append(line)
+        source = "\n".join(self.buffer)
+        more = self.runsource(source, "<console>")
+        if not more:
+            self._resetbuffer()
+        return more
 
     def write_output(self, text):
         self.moveCursor(QTextCursor.End)
@@ -154,43 +275,51 @@ class PythonInterpreter(QTextEdit):
         self.moveCursor(QTextCursor.End)
 
     def write_prompt(self):
-        self.write_output(self.prompt)
+        if self.more:
+            self.write_output(self.continue_prompt)
+        else:
+            self.write_output(self.prompt)
         self.get_prompt_position()
 
     def get_prompt_position(self):
         cursor = self.textCursor()
         cursor.movePosition(QTextCursor.End)
+        end_pos = cursor.position()
         cursor.movePosition(QTextCursor.StartOfLine)
-        self.prompt_pos = cursor.position() + len(self.prompt)
+        self.prompt_pos = cursor.position() + self.prompt_len
+        if self.prompt_pos > end_pos:
+            self.prompt_pos = end_pos
         return self.prompt_pos
 
     def get_current_command(self):
         cursor = self.textCursor()
         cursor.movePosition(QTextCursor.End)
-        cursor.movePosition(QTextCursor.StartOfLine, QTextCursor.KeepAnchor)
+        cursor.setPosition(self.prompt_pos, QTextCursor.KeepAnchor)
         full_line = cursor.selectedText()
-        return full_line[len(self.prompt):] if full_line.startswith(self.prompt) else full_line
+        return full_line
 
     def set_current_command(self, cmd):
         cursor = self.textCursor()
         cursor.movePosition(QTextCursor.End)
-        cursor.movePosition(QTextCursor.StartOfLine, QTextCursor.KeepAnchor)
+        cursor.setPosition(self.prompt_pos, QTextCursor.KeepAnchor)
         cursor.removeSelectedText()
-        cursor.insertText(self.prompt + cmd, self.textCursor().charFormat())
+        cursor.insertText(cmd, self.textCursor().charFormat())
         self.moveCursor(QTextCursor.End)
 
     def navigate_history(self, direction):
         if not self.history:
             return
 
+        # self.history_index is the reverse index of self.history
         if direction == Qt.Key_Up:  # up is pressed
-            if self.history_index < len(self.history) - 1:
-                self.history_index += 1
-        else:  # down is pressed
-            if self.history_index > 0:
+            if abs(self.history_index) >= len(self.history):
+                self.history_index = -len(self.history)
+            else:
                 self.history_index -= 1
-            elif self.history_index == 0:
-                self.history_index = -1
+        else:  # down is pressed
+            self.history_index += 1
+            if self.history_index >= 0:
+                self.history_index = 0
                 self.set_current_command("")
                 return
 
@@ -202,60 +331,26 @@ class PythonInterpreter(QTextEdit):
         # append cmd to history
         if cmd.strip() and (not self.history or self.history[-1] != cmd):
             self.history.append(cmd)
-        self.history_index = -1
+        self.history_index = 0
 
-        # maybe multi lines cmd
-        if self.pending_code:
-            self.pending_code += "\n" + cmd
-        else:
-            self.pending_code = cmd
-
-        # checke mutli lines ends
-        try:
-            # try complie cur cmd
-            code_obj = self.compiler(self.pending_code)
-            self.pending_code = ""
-        except SyntaxError as e:
-            if "unexpected EOF" in str(e):
-                # waitting for more input
-                self.prompt = "... "
-                self.write_output("\n" + self.prompt)
-                return
-            else:
-                self.write_output(f"\nSyntaxError: {e}\n")
-                self.pending_code = ""
-                return
-        except Exception as e:
-            self.write_output(f"\nError: {e}\n")
-            self.pending_code = ""
-            return
-
-        # run code
-        if code_obj:
-            self.execute_python_code(code_obj)
-
-        # recover prompt
-        self.prompt = ">>> "
-        self.write_prompt()
-
-    def execute_python_code(self, code):
-        # redirect python stdout to this QLineEdit
+        # redirect stdout to output
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
-            try:
-                exec(code, globals())
-            except Exception as e:
-                print(f"Error: {e}")
-
+            self.more = self.push(cmd)
+        self.write_output("\n")
         result = output.getvalue()
         if result:
-            self.write_output("\n" + result)
-        else:
-            self.write_output("\n")
+            self.write_output(result)
+        self.write_prompt()
+
+    def write(self, text):
+        """override InteractiveInterpreter.write"""
+        self.write_output('\n'+text)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     interpreter = PythonInterpreter()
+    interpreter.setFixedSize(1200, 900)
     interpreter.show()
     sys.exit(app.exec_())
