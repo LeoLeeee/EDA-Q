@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QCompleter
+from PyQt5.QtWidgets import QApplication, QPlainTextEdit, QCompleter, QListView
 from PyQt5.QtCore import Qt, QEvent, QStringListModel, pyqtSignal
 from PyQt5.QtGui import QTextCursor, QFont, QSyntaxHighlighter, QTextCharFormat, QColor
 from PyQt5.QtCore import QRegularExpression, QRect
@@ -89,25 +89,41 @@ class PythonHighlighter(QSyntaxHighlighter):
                                QTextCharFormat().setForeground(QColor(163, 21, 21)))
 
 
+class CompleterPop(QListView):
+    """Export protected event function in QListView to public"""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowFlag(Qt.WindowType.Sheet)
+
+    def event(self, e):
+        return super().event(e)
+
+
 class PythonCompleter(QCompleter):
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.setCaseSensitivity(Qt.CaseSensitive)
         self.setCompletionMode(QCompleter.PopupCompletion)
+
         self.completion_model = QStringListModel()
         self.setModel(self.completion_model)
         self.local_context = set()
         self.dot_expression = None
         self.update_completion_context(dir(builtins))
+
         self.installEventFilter(self)
+
+        self.pop_wg = CompleterPop()
+        self.setPopup(self.pop_wg)
 
     def update_completion_context(self, context):
         self.local_context.update(context)
         self.completion_model.setStringList(list(self.local_context))
 
     def eventFilter(self, obj, event):
-        if event.type() == QEvent.KeyPress:
+        if obj == self and event.type() == QEvent.KeyPress:
             if self.popup() and self.popup().isVisible():
                 pressed_key = event.key()
                 if pressed_key == Qt.Key_Escape:
@@ -119,14 +135,13 @@ class PythonCompleter(QCompleter):
                         self.activated.emit(complete_str)
                     self.popup().hide()
                     return True
-                elif pressed_key == Qt.Key_Return or pressed_key == Qt.Key_Enter:
-                    self.popup().hide()
-                    self.widget().eventFilter(self.widget(), event)
+                elif pressed_key in (Qt.Key_Up, Qt.Key_Down, Qt.Key_Home, Qt.Key_End, Qt.Key_PageUp, Qt.Key_PageDown):
+                    self.popup().event(event)
                     return True
         return super().eventFilter(obj, event)
 
     def triggerCompletion(self, word: str, rect: QRect, locals: dict):
-        # TODO:processing . expression
+        # processing dot expression
         if '.' in word:
             parts = word.rsplit('.', 1)
             base = parts[0]
@@ -145,7 +160,6 @@ class PythonCompleter(QCompleter):
             self.setCompletionPrefix(word)
         rect.setWidth(200)
         # highlight firt complete item
-        # self.popup().setWindowFlag(Qt.Widget)
         self.popup().setCurrentIndex(self.popup().model().index(0, 0))
         self.complete(rect)
 
@@ -204,6 +218,7 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
             self.setTextCursor(cursor)
 
         self.ensureCursorVisible()
+        self.completer.popup().hide()
 
     def handleTextChanged(self):
         """Handle text changed. get last word and trigger completion."""
@@ -246,7 +261,13 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
             prompt_pos = self.prompt_pos
             if event.type() == QEvent.KeyPress:
                 press_key = event.key()
-                # only last line can be edited
+
+                # in complete mode
+                if self.completer.popup().isVisible() and press_key in (Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Up, Qt.Key_Down, Qt.Key_Home, Qt.Key_End, Qt.Key_PageUp, Qt.Key_PageDown):
+                    self.completer.eventFilter(self.completer, event)
+                    return True
+
+                    # only last line can be edited
                 if cursor.hasSelection() or cursor_pos < prompt_pos:
                     return True
 
@@ -273,7 +294,8 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
                 elif press_key == Qt.Key_Tab:
                     cursor.insertText("    ")
                     return True
-
+            elif event.type() in (QEvent.Move, QEvent.Resize, QEvent.FocusOut):
+                self.completer.popup().hide()
         return super().eventFilter(obj, event)
 
     def _resetbuffer(self):
