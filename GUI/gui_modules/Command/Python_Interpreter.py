@@ -20,7 +20,7 @@ class PythonHighlighter(QSyntaxHighlighter):
         keyword_format.setForeground(QColor(0, 0, 255))  # blue
         keyword_format.setFontWeight(QFont.Bold)
         keywords = [
-            'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del',
+            'for', 'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del',
             'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if',
             'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass',
             'raise', 'return', 'try', 'while', 'with', 'yield', 'None', 'True', 'False'
@@ -65,8 +65,18 @@ class PythonHighlighter(QSyntaxHighlighter):
         self.highlighting_rules.append(
             (QRegularExpression(r'\bclass\s+(\w+)'), class_format))
 
-    def highlightBlock(self, text):
-        # highlight for block code
+        # triple quotes
+        triple_format = QTextCharFormat()
+        triple_format.setForeground(QColor(163, 21, 21))
+        self.highlighting_rules.append(
+            (QRegularExpression(r'"""[^"]*"""'), triple_format))
+        self.highlighting_rules.append(
+            (QRegularExpression(r"'''[^']*'''"), triple_format))
+
+    def highlightBlock(self, text: str):
+        # only highlight for code zone
+        if not text.startswith(">>> ") and not text.startswith("... "):
+            return
         for pattern, fmt in self.highlighting_rules:
             match_iterator = pattern.globalMatch(text)
             while match_iterator.hasNext():
@@ -74,20 +84,7 @@ class PythonHighlighter(QSyntaxHighlighter):
                 self.setFormat(match.capturedStart(),
                                match.capturedLength(), fmt)
 
-        #
         self.setCurrentBlockState(0)
-
-        # triple quotes
-        triple_double = QRegularExpression(r'"""[^"]*"""')
-        triple_single = QRegularExpression(r"'''[^']*'''")
-
-        for pattern in [triple_double, triple_single]:
-            match_iterator = pattern.globalMatch(text)
-            while match_iterator.hasNext():
-                match = match_iterator.next()
-                self.setFormat(match.capturedStart(), match.capturedLength(),
-                               QTextCharFormat().setForeground(QColor(163, 21, 21)))
-
 
 class CompleterPop(QListView):
     """Export protected event function in QListView to public"""
