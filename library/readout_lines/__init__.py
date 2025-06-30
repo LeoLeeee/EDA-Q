@@ -19,4 +19,6 @@ module_name_list = ["readout_arrow_plus",
                     "readout_cavity_plus",
                     "readout_cavity",
                     "readout_line_finger_plus",
-                    "readout_line_finger"]
+                    "readout_line_finger",
+                    "readout_cavity_flipchip_no_pad"
+                    ]

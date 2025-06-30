@@ -1,0 +1,373 @@
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:01:44 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 57819.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity, Database failed to open: readout_cavity.aedb (05:01:54 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[warning] GDSII Translation: GDSII Import process has been aborted.
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity, Database failed to open: readout_cavity.aedb (05:03:30 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity, GDSII Translation: Translation Log file (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: Translation Start: Fri Jun 27 17:03:45 2025 (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: [05:03:45 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: [05:03:45 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: [05:03:45 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:03:47 PM  Jun 27, 2025)
+[warning] Project:readout_cavity, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:03:47 PM  Jun 27, 2025)
+[info] Project:readout_cavity, GDSII Translation: Translation Stop: Fri Jun 27 17:03:45 2025 (05:03:47 PM  Jun 27, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:07:24 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 58604.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity1, Database failed to open: readout_cavity1.aedb (05:07:27 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity1, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity1, GDSII Translation: Translation Log file (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: Translation Start: Fri Jun 27 17:07:30 2025 (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: [05:07:30 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: [05:07:30 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: [05:07:30 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:07:31 PM  Jun 27, 2025)
+[warning] Project:readout_cavity1, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:07:31 PM  Jun 27, 2025)
+[info] Project:readout_cavity1, GDSII Translation: Translation Stop: Fri Jun 27 17:07:30 2025 (05:07:31 PM  Jun 27, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:14:29 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 59443.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity2, Database failed to open: readout_cavity2.aedb (05:14:33 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity2, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity2, GDSII Translation: Translation Log file (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: Translation Start: Fri Jun 27 17:14:35 2025 (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: [05:14:35 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: [05:14:35 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: [05:14:35 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:14:37 PM  Jun 27, 2025)
+[warning] Project:readout_cavity2, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:14:37 PM  Jun 27, 2025)
+[info] Project:readout_cavity2, GDSII Translation: Translation Stop: Fri Jun 27 17:14:35 2025 (05:14:37 PM  Jun 27, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:17:18 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 59870.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity3, Database failed to open: readout_cavity3.aedb (05:17:21 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity3, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity3, GDSII Translation: Translation Log file (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: Translation Start: Fri Jun 27 17:17:24 2025 (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: [05:17:24 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: [05:17:24 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: [05:17:24 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:17:25 PM  Jun 27, 2025)
+[warning] Project:readout_cavity3, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:17:25 PM  Jun 27, 2025)
+[info] Project:readout_cavity3, GDSII Translation: Translation Stop: Fri Jun 27 17:17:24 2025 (05:17:25 PM  Jun 27, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:19:21 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 60026.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity4, Database failed to open: readout_cavity4.aedb (05:19:24 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[warning] GDSII Translation: GDSII Import process has been aborted.
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:20:33 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 60122.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity4, Database failed to open: readout_cavity4.aedb (05:20:37 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity4, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity4, GDSII Translation: Translation Log file (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: Translation Start: Fri Jun 27 17:20:56 2025 (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: [05:20:56 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: [05:20:56 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: [05:20:56 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:20:57 PM  Jun 27, 2025)
+[warning] Project:readout_cavity4, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:20:57 PM  Jun 27, 2025)
+[info] Project:readout_cavity4, GDSII Translation: Translation Stop: Fri Jun 27 17:20:56 2025 (05:20:57 PM  Jun 27, 2025)
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity5, Database failed to open: readout_cavity5.aedb (05:24:56 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[warning] GDSII Translation: GDSII Import process has been aborted.
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:25:06 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 60750.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity5, Database failed to open: readout_cavity5.aedb (05:25:09 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[warning] GDSII Translation: GDSII Import process has been aborted.
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 5:33:00 PM  Jun 27, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 61958.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity5, Database failed to open: readout_cavity5.aedb (05:33:04 PM  Jun 27, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity5, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity5, GDSII Translation: Translation Log file (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: Translation Start: Fri Jun 27 17:33:14 2025 (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: [05:33:14 PM  Jun 27, 2025]Initialize ... Duration: 0 seconds (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: [05:33:14 PM  Jun 27, 2025]PopulateEDB ... Duration: 0 seconds (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: [05:33:14 PM  Jun 27, 2025]Flatten ... Duration: 0 seconds (05:33:16 PM  Jun 27, 2025)
+[warning] Project:readout_cavity5, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: Total Errors: 0 Total Warnings: 1 (05:33:16 PM  Jun 27, 2025)
+[info] Project:readout_cavity5, GDSII Translation: Translation Stop: Fri Jun 27 17:33:14 2025 (05:33:16 PM  Jun 27, 2025)
+[info] Project readout_cavity has been created.
+[info] No design is present. Inserting a new design.
+[info] Added design 'HFSS_ZKY' of type HFSS.
+[info] Aedt Objects correctly read
+[info] GDS layer imported with elevations and thickness.
+[info] Modeler class has been initialized! Elapsed time: 0m 0sec
+[info] Parsing design objects. This operation can take time
+[info] Refreshing bodies from Object Info
+[info] Bodies Info Refreshed Elapsed time: 0m 0sec
+[info] 3D Modeler objects parsed. Elapsed time: 0m 0sec
+[info] Union of 81 objects has been executed.
+[info] Materials class has been initialized! Elapsed time: 0m 0sec
+[info] Parsing design objects. This operation can take time
+[info] Refreshing bodies from Object Info
+[info] Bodies Info Refreshed Elapsed time: 0m 0sec
+[info] 3D Modeler objects parsed. Elapsed time: 0m 0sec
+[info] Boundary Perfect E PerfectE has been created.
+[info] Key Desktop/ActiveDSOConfigurations/HFSS correctly changed.
+[info] Solving design setup setup1
+[info] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Normal completion of simulation on server: Local Machine. (07:17:39 PM  Jun 27, 2025)
+[info] Key Desktop/ActiveDSOConfigurations/HFSS correctly changed.
+[info] Design setup setup1 solved correctly in 0.0h 4.0m 3.0s
+[info] Parsing D:/Users/chen/Documents/Ansoft/readout_cavity.aedt.
+[info] File D:/Users/chen/Documents/Ansoft/readout_cavity.aedt correctly loaded. Elapsed time: 0m 0sec
+[info] aedt file load time 0.002998828887939453
+[info] PostProcessor class has been initialized! Elapsed time: 0m 0sec
+[info] PostProcessor class has been initialized! Elapsed time: 0m 0sec
+[info] Post class has been initialized! Elapsed time: 0m 0sec
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), The variable  'Phase' doesn't have an associated sweep and is excluded from the definition of trace. (07:17:39 PM  Jun 27, 2025)
+[info] Solution Data Correctly Loaded.
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), The variable  'Phase' doesn't have an associated sweep and is excluded from the definition of trace. (07:17:39 PM  Jun 27, 2025)
+[info] Solution Data Correctly Loaded.
+[info] Project readout_cavity Saved correctly
+[error] **************************************************************
+[error]   File "D:\5j\test_pyepr\eigenmode1.py", line 196, in <module>
+[error]     run_eigenmode_simulation(gds_path ,gds_name.split('.')[0], start_point_1 , dx , dy ,dz = thickness[i] , basic_material = 'sapphire' , region_material = 'vacuum')
+[error]   File "D:\5j\test_pyepr\eigenmode1.py", line 131, in run_eigenmode_simulation
+[error]     d.release_desktop()
+[error] 'desktop' object has no attribute 'is_grpc_api' on release_desktop
+[error] Last Electronics Desktop Message - [error]  'desktop' object has no attribute 'is_grpc_api' on release_desktop
+[error] **************************************************************
+[info] Project readout_cavity set to active.
+[info] Active Design set to HFSS_ZKY
+[info] Active Design set to HFSS_ZKY
+[info] Aedt Objects correctly read
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), HFSS_ZKY: Solutions have been invalidated. Undo to recover. (07:17:41 PM  Jun 27, 2025)
+[info] GDS layer imported with elevations and thickness.
+[info] Modeler class has been initialized! Elapsed time: 0m 0sec
+[info] Parsing design objects. This operation can take time
+[info] Refreshing bodies from Object Info
+[info] Bodies Info Refreshed Elapsed time: 0m 0sec
+[info] 3D Modeler objects parsed. Elapsed time: 0m 0sec
+[info] Union of 82 objects has been executed.
+[info] Materials class has been initialized! Elapsed time: 0m 0sec
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Part Attributes: Name rectangle1 is already used, use name rectangle1_1. (07:17:42 PM  Jun 27, 2025)
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Boundary 'PerfectE': Boundary lost its assignment due to geometry modifications and has been deleted. (07:17:42 PM  Jun 27, 2025)
+[info] Parsing design objects. This operation can take time
+[info] Refreshing bodies from Object Info
+[info] Bodies Info Refreshed Elapsed time: 0m 0sec
+[info] 3D Modeler objects parsed. Elapsed time: 0m 0sec
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Part Attributes: Name Box1 is already used, use name Box1_1. (07:17:42 PM  Jun 27, 2025)
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Part Attributes: Name Box2 is already used, use name Box2_1. (07:17:42 PM  Jun 27, 2025)
+[info] Boundary Perfect E PerfectE has been created.
+[info] Parsing design objects. This operation can take time
+[info] Refreshing bodies from Object Info
+[info] Bodies Info Refreshed Elapsed time: 0m 0sec
+[info] 3D Modeler objects parsed. Elapsed time: 0m 0sec
+[error] region object already exists
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Script macro error: Selections: Part with name False is not found!
+Selections: At least one part should be selected for the operation.
+ (07:17:42 PM  Jun 27, 2025)
+[error] **************************************************************
+[error]   File "D:\5j\test_pyepr\eigenmode1.py", line 196, in <module>
+[error]     run_eigenmode_simulation(gds_path ,gds_name.split('.')[0], start_point_1 , dx , dy ,dz = thickness[i] , basic_material = 'sapphire' , region_material = 'vacuum')
+[error]   File "D:\5j\test_pyepr\eigenmode1.py", line 86, in run_eigenmode_simulation
+[error]     hfss.assign_material(region, region_material)
+[error] AEDT API Error on assign_material
+[error] Last Electronics Desktop Message - [error]  script macro error: selections: part with name false is not found!
+selections: at least one part should be selected for the operation.
+ (07:17:42 pm  jun 27, 2025)
+[error] Method arguments: 
+[error]     material = vacuum 
+[error] **************************************************************
+[info] Key Desktop/ActiveDSOConfigurations/HFSS correctly changed.
+[info] Solving design setup setup1
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Parts Box2_1 and Box2 intersect. (07:17:45 PM  Jun 27, 2025)
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Simulation completed with execution error on server: Local Machine. (07:17:45 PM  Jun 27, 2025)
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Script macro error: Simulation for readout_cavity : HFSS_ZKY : setup1 has failed with execution error.  (07:17:45 PM  Jun 27, 2025)
+[info] Key Desktop/ActiveDSOConfigurations/HFSS correctly changed.
+[error] Error in Solving Setup setup1
+[info] Parsing D:/Users/chen/Documents/Ansoft/readout_cavity.aedt.
+[info] File D:/Users/chen/Documents/Ansoft/readout_cavity.aedt correctly loaded. Elapsed time: 0m 0sec
+[info] aedt file load time 0.10513830184936523
+[info] PostProcessor class has been initialized! Elapsed time: 0m 0sec
+[info] PostProcessor class has been initialized! Elapsed time: 0m 0sec
+[info] Post class has been initialized! Elapsed time: 0m 0sec
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), The variable  'Phase' doesn't have an associated sweep and is excluded from the definition of trace. (07:17:45 PM  Jun 27, 2025)
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Script macro error: No trace data for quantity: Q(1) (07:17:45 PM  Jun 27, 2025)
+[warning] Solution Data failed to load. Check solution, context or expression.
+[warning] No Data Available. Check inputs
+[warning] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), The variable  'Phase' doesn't have an associated sweep and is excluded from the definition of trace. (07:17:46 PM  Jun 27, 2025)
+[error] Project:readout_cavity, Design:HFSS_ZKY (Eigenmode), Script macro error: No trace data for quantity: Mode(1) (07:17:46 PM  Jun 27, 2025)
+[warning] Solution Data failed to load. Check solution, context or expression.
+[warning] No Data Available. Check inputs
+[info] Project readout_cavity Saved correctly
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 8:31:01 AM  Jun 28, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[info] GRPC server running on port: 61288.
+
+[error] edbkern::Database::Open warning: edbkern::Exception EDB configuration file read error.
+[error] Project:readout_cavity14, Database failed to open: readout_cavity14.aedb (08:31:10 AM  Jun 28, 2025)
+[error] Loading project failed: d:/5j/EDA-Q/test/readout_cavity.gds.
+[info] Project:readout_cavity14, Design:readout1_nopad_cell, cell count: 1, primitive count 81 (Top: 81), cell instance count: 0, primitive instance count: 81, text instance count: 0, instance array count: 0.
+[info] Project:readout_cavity14, GDSII Translation: Translation Log file (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: AnsTranslator Path: D:\Program Files\AnsysEM\v241\Win64\AnsysECADXplorer.exe (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: Input: d:/5j/EDA-Q/test/readout_cavity.gds (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: Translation Start: Sat Jun 28 08:31:14 2025 (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: [08:31:14 AM  Jun 28, 2025]Initialize ... Duration: 0 seconds (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: [08:31:14 AM  Jun 28, 2025]PopulateEDB ... Duration: 0 seconds (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: [08:31:14 AM  Jun 28, 2025]Flatten ... Duration: 0 seconds (08:31:16 AM  Jun 28, 2025)
+[warning] Project:readout_cavity14, GDSII Translation: Nets will not be processed unless at least one conductive layers has thickness greater than 0. (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: Total Errors: 0 Total Warnings: 1 (08:31:16 AM  Jun 28, 2025)
+[info] Project:readout_cavity14, GDSII Translation: Translation Stop: Sat Jun 28 08:31:14 2025 (08:31:16 AM  Jun 28, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 9:19:53 AM  Jun 28, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[warning] Electronics Desktop has found a recovery file for an unsaved project : Project25.aedt.auto
+Please choose one of the following actions for this file: 
+ Yes: Open the recovery file. 
+ No: Discard the recovery file.
+ Cancel: Leave the recovery file on disk ( this prompt will reappear during the next application start) .
+[warning] Database failed to open: readout_cavity15.aedb (09:19:59 AM  Jun 28, 2025)
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] Electronics Desktop cannot be closed right now because it is being used by another application, script or extension wizard.
+
+[warning] The project selected and all its files will be deleted from the permanent storage medium.
+
+WARNING: All work will be lost.
+
+Click OK to proceed.
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 9:22:53 AM  Jun 28, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[warning] Electronics Desktop has found a recovery file for an unsaved project : Project25.aedt.auto
+Please choose one of the following actions for this file: 
+ Yes: Open the recovery file. 
+ No: Discard the recovery file.
+ Cancel: Leave the recovery file on disk ( this prompt will reappear during the next application start) .
+[warning] Database failed to open: readout_cavity16.aedb (09:22:59 AM  Jun 28, 2025)
+ 
+Ansys Electronics Desktop Version 2024.1.0, Build: 2023-11-27 22:16:18
+Location: D:\Program Files\AnsysEM\v241\Win64\ansysedt.exe
+Non Graphical Mode: No Project??
+Starting Batch Run: 9:23:44 AM  Jun 28, 2025
+Running as user : ccccl\chen
+Temp directory: D:\Users\chen\AppData\Local\Temp
+Project directory: D:\Users\chen\Documents\Ansoft
+[warning] Electronics Desktop has found a recovery file for an unsaved project : Project25.aedt.auto
+Please choose one of the following actions for this file: 
+ Yes: Open the recovery file. 
+ No: Discard the recovery file.
+ Cancel: Leave the recovery file on disk ( this prompt will reappear during the next application start) .
