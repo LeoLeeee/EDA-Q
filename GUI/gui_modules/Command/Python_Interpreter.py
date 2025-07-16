@@ -86,6 +86,7 @@ class PythonHighlighter(QSyntaxHighlighter):
 
         self.setCurrentBlockState(0)
 
+
 class CompleterPop(QListView):
     """Export protected event function in QListView to public"""
 
@@ -155,7 +156,13 @@ class PythonCompleter(QCompleter):
                 self.completion_model.setStringList(list(self.local_context))
                 self.dot_expression = None
             self.setCompletionPrefix(word)
-        rect.setWidth(200)
+        # set popup rect width by max completion string length
+        model = self.popup().model()
+        width = 100
+        for row in range(0, model.rowCount()):
+            complete_str = model.data(model.index(row, 0))
+            width = max(len(complete_str)*15, width)
+        rect.setWidth(width)
         # highlight firt complete item
         self.popup().setCurrentIndex(self.popup().model().index(0, 0))
         self.complete(rect)
@@ -209,7 +216,7 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
         """Handle cursor position always after prompt."""
         cursor = self.textCursor()
         cursor_pos = cursor.position()
-        if cursor_pos < self.prompt_pos:
+        if cursor_pos < self.prompt_pos and self.prompt_pos < self.document().characterCount():
             cursor.setPosition(self.prompt_pos, QTextCursor.KeepAnchor if cursor.hasSelection(
             ) else QTextCursor.MoveAnchor)
             self.setTextCursor(cursor)
@@ -308,6 +315,17 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
             self._resetbuffer()
         return more
 
+    def clear_output(self):
+        # clear terminal current line, and reset more statue
+        # recover prompt to ">>> "
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        cursor.movePosition(QTextCursor.MoveOperation.StartOfLine,
+                            QTextCursor.KeepAnchor)
+        cursor.removeSelectedText()
+        self.more = False
+        self.write_prompt()
+
     def write_output(self, text):
         self.moveCursor(QTextCursor.End)
         self.insertPlainText(text)
@@ -386,6 +404,15 @@ class PythonInterpreter(QPlainTextEdit, InteractiveInterpreter):
     def write(self, text):
         """override InteractiveInterpreter.write"""
         self.write_output('\n'+text)
+
+    def addLocalsVar(self, local_var: dict):
+        self.locals.update(local_var)
+        self.completer.update_completion_context(self.locals)
+        self.clear_output()
+        if local_var:
+            # write the last variable to the output
+            self.write_output(list(local_var.keys())[-1])
+        self.setFocus()
 
 
 if __name__ == '__main__':
