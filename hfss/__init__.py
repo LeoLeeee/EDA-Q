@@ -1,1 +1,0 @@
-from hfss import eigenmode

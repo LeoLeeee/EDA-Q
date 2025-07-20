@@ -4,24 +4,38 @@ This tutorial introduces the usage of EDA-Q.
 
 ## Table of Contents
 
-- [Basic Interface](#basic-interface)
+### 拓扑设计(Topology Design)
+
 - [Topology Design](#topology-design)
-- [Equivalent Circuit Design](#equivalent-circuit-design)
 - [Generate Qubits](#generate-qubits)
 - [Generate Chip](#generate-chip)
 - [Generate Coupling Lines](#generate-coupling-lines)
 - [Generate Readout Lines](#generate-readout-lines)
 - [Generate Control Lines](#generate-control-lines)
 - [Generate Transmission Lines](#generate-transmission-lines)
-- [Auto Routing](#auto-routing)
-- [Simulation](#simulation)
-- [Modify The Gds Layout](#modify-the-gds-layout)
-- [Add Air Bridges](#add-air-bridges)
+
+### 等效电路计算 (Equivalent Circuit Design)
+
+- [Equivalent Circuit Design](#equivalent-circuit-design)
 - [Calculation of physical parameters](#calculation-of-physical-parameters)
-- [Add Tunnel Bridges](#add-tunnel-bridges)
 - [scqubits](#scqubits)
-- [hfss] (#hfss)
-- [Other Functions](#other-functions)
+
+### 器件映射 (Device Mapping)
+
+- [Basic Interface](#basic-interface)
+- [Modify The Gds Layout](#modify-the-gds-layout)
+
+### 自动化布局布线 (Auto Routing)
+
+- [Auto Routing](#auto-routing)
+- [Add Air Bridges](#add-air-bridges)
+- [Add Tunnel Bridges](#add-tunnel-bridges)
+
+### 仿真验证 (Simulation)
+
+- [Simulation](#simulation)
+- [HFSS](#hfss)
+- [Q3D](#q3d)
 
 ## Basic Interface
 
@@ -576,7 +590,19 @@ from hfss.eigenmode import eigenmode
 ei = eigenmode()
 ei.run_eigenmode_simulation_from_gds(self , gds_name , thickness = [0.007 , 0.008 , 0.009 , 0.01] , basic_material = 'sapphire' , region_material = 'vaccum')
 ```
+### q3d
+
+```python
+#q3d extraction (import gds file. optional : thickness , basic_material , region_material)
+from renderer.q3d.capative import capacitance
+cp = capacitance()
+cp.run_q3d_extraction_from_gds(gds_name , thickness = [0.007 , 0.008 , 0.009 , 0.01] , basic_material = 'sapphire' , region_material = 'vaccum')
+```
+
+
+
 ## Other functions
+
 ```python
 # Temporarily add a single component
 path = "./transmon_test.gds"
