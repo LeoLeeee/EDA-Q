@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QMenu
-from PyQt5.QtCore import Qt, QSize, pyqtSignal, QPoint
+from PyQt5.QtWidgets import QApplication, QWidget, QMenu, QFileDialog
+from PyQt5.QtCore import Qt, QSize, pyqtSignal, QPoint, QStandardPaths
 
 from OCC.Display.OCCViewer import Viewer3d
 from OCC.Core import gp, BRepBuilderAPI, Quantity, AIS
+from OCC.Core import STEPControl
 
 import networkx as nx
 
@@ -13,6 +14,7 @@ class GdsEditor(QWidget):
 
     class Action(IntEnum):
         SHOW_IN_INTERPRETER = 0
+        SAVE_FILE = 1
 
     sendObjToInterpreter = pyqtSignal(dict)
 
@@ -26,7 +28,9 @@ class GdsEditor(QWidget):
             QMenu.__init__(self, parent)
             self.cur_pos = None
             self.addAction("Show in interpreter").triggered.connect(
-                lambda chcek, self=self: self.action_triggered.emit(GdsEditor.Action.SHOW_IN_INTERPRETER.value, self.cur_pos))
+                lambda check, self=self: self.action_triggered.emit(GdsEditor.Action.SHOW_IN_INTERPRETER.value, self.cur_pos))
+            self.addAction("Save current layout to file").triggered.connect(
+                lambda check, self=self: self.action_triggered.emit(GdsEditor.Action.SAVE_FILE.value, self.cur_pos))
 
         def popup(self, p, action=None):
             self.cur_pos = p
@@ -75,6 +79,9 @@ class GdsEditor(QWidget):
         return QSize(800, 600)
 
     def handleMenuAction(self, action, pos):
+        '''
+        process right mouse button menu action
+        '''
         lpos = self.mapFromGlobal(pos)
 
         if action == GdsEditor.Action.SHOW_IN_INTERPRETER:
@@ -86,6 +93,22 @@ class GdsEditor(QWidget):
                 component = list(
                     self.component_shape_map.predecessors(ais_shape))[0]
                 self.sendObjToInterpreter.emit({"selec_component": component})
+        elif action == GdsEditor.Action.SAVE_FILE:
+            save_fn, _ = QFileDialog.getSaveFileName(
+                None, "Save File", QStandardPaths.writableLocation(QStandardPaths.StandardLocation.HomeLocation), ".step")
+            if save_fn:
+                self.saveCurrentLayout(save_fn)
+            else:
+                return
+
+    def saveCurrentLayout(self, fn):
+        writer = STEPControl.STEPControl_Writer()
+        for node in self.component_shape_map:
+            if type(node) == AIS.AIS_Shape:
+                writer.Transfer(
+                    node.Shape(), STEPControl.STEPControl_StepModelType.STEPControl_AsIs)
+
+        writer.Write(fn)
 
     def resizeEvent(self, event):
         super(GdsEditor, self).resizeEvent(event)
@@ -112,7 +135,6 @@ class GdsEditor(QWidget):
         self._display.ZoomFactor(zoom_factor)
 
     def mousePressEvent(self, event):
-        # self.setFocus()
         pos = event.pos()
         button = event.button()
         # use left mouse button to pan
