@@ -6,13 +6,9 @@ This tutorial introduces the usage of EDA-Q.
 
 ### 拓扑设计(Topology Design)
 
+- [Basic Interface](#basic-interface)
+- [Modify The Gds Layout](#modify-the-gds-layout)
 - [Topology Design](#topology-design)
-- [Generate Qubits](#generate-qubits)
-- [Generate Chip](#generate-chip)
-- [Generate Coupling Lines](#generate-coupling-lines)
-- [Generate Readout Lines](#generate-readout-lines)
-- [Generate Control Lines](#generate-control-lines)
-- [Generate Transmission Lines](#generate-transmission-lines)
 
 ### 等效电路计算 (Equivalent Circuit Design)
 
@@ -22,8 +18,12 @@ This tutorial introduces the usage of EDA-Q.
 
 ### 器件映射 (Device Mapping)
 
-- [Basic Interface](#basic-interface)
-- [Modify The Gds Layout](#modify-the-gds-layout)
+- [Generate Qubits](#generate-qubits)
+- [Generate Chip](#generate-chip)
+- [Generate Coupling Lines](#generate-coupling-lines)
+- [Generate Readout Lines](#generate-readout-lines)
+- [Generate Control Lines](#generate-control-lines)
+- [Generate Transmission Lines](#generate-transmission-lines)
 
 ### 自动化布局布线 (Auto Routing)
 
@@ -37,7 +37,9 @@ This tutorial introduces the usage of EDA-Q.
 - [HFSS](#hfss)
 - [Q3D](#q3d)
 
-## Basic Interface
+## Topology Design
+
+### Basic Interface
 
 EDA-Q abstracts each designed object into a class, and operations are performed based on these classes. These design objects are located in the `./api` directory, including `Design`, `Topology`, `EquivalentCircuit`, and `Gds`. In most cases, you should use the `Design` class as the foundation for the entire chip design. The usage is as follows:
 
@@ -46,7 +48,75 @@ from api.design import Design
 design = Design()
 ```
 
-## Topology Design
+### Modify The Gds Layout
+
+```python
+# Only the usage of manipulating qubits is listed here, other types of components are similar to use
+
+# Calculate the general parameters of the component framework
+design.gds.qubits.calc_general_ops()
+# Move every components
+design.gds.qubits.move(pos_name="gds_pos", dx=-200, dy=500)
+# Modifies the value of a single option
+design.gds.qubits.change_option(op_name="width", op_value="800")
+# Modifies the values of multiple options
+options = Dict(
+    cpw_width=[15]*6,
+    cpw_extend=[80]*6,
+    width=600,
+    height=300,
+    gap=10,
+)
+design.gds.qubits.change_options(new_options=options)
+# Add a new component
+options = Dict(
+    name = "q0",
+    type = "Transmon",
+    gds_pos = (0, 0),
+    topo_pos = (0, 0),
+    chip = "chip0",
+)
+design.gds.qubits.add(options=options)
+# Copy a specified component
+design.gds.qubits.copy_component(old_name="q0", new_name="q1")
+# Generate a row of components
+design.gds.qubits.generate_row(start_pos=(0, 0),
+                               dist=2000,
+                               key="gds_pos",
+                               num="10",
+                               pre_name="qubits_row_",
+                               type="Transmon",
+                               geometric_options=None)
+# Batch generate components
+design.gds.qubits.batch_generate(pos_list=[(0, 0), (2000, 0)],
+                                 key="gds_pos",
+                                 pre_name="qubits_batch_",
+                                 type="Transmon",
+                                 geometric_options=None)
+# Batch modify component options
+design.gds.qubits.batch_change(name_list=["q0", "q1"],
+                               op_name="type",
+                               op_value="Xmon")
+# Fast add components
+op0 = Dict(
+    name = "q0",
+    type = "Transmon",
+    gds_pos = (0, 0),
+    topo_pos = (0, 0),
+    chip = "chip0",
+)
+op1 = Dict(
+    name = "q1",
+    type = "Transmon",
+    gds_pos = (2000, 0),
+    topo_pos = (1, 0),
+    chip = "chip0",
+)
+options_list = [op0, op1]
+design.gds.qubits.batch_add(options_list=options_list)
+```
+
+### Topology Design
 
 EDA-Q integrates topology design functionality, with the `Topology` class including a series of modules for automated topology design. Typically, the `Topology` class relies on the `Design` class for designing. The usage is as follows:
 
@@ -116,6 +186,8 @@ design.topology.show_options(topology=True)
 ```
 ## Equivalent Circuit Design
 
+### Equivalent Circuit Design
+
 ```python
 # Create an equivalent circuit based on the existing topology.
 design.generate_equivalent_circuit()
@@ -156,7 +228,106 @@ design.equivalent_circuit.call_loss_rates()
 # Calculating the Kerr parameters.
 design.equivalent_circuit.call_kerr()
 ```
-## Generate Qubits
+### Calculation of physical parameters
+
+```python
+# calculate qubit parameters
+toolbox.caculate_qubits_parms(f_q=65, Ec=30)
+```
+
+### scqubits
+
+~~~python
+# Initialize a transmon qubit
+scTransmon(EJ=30, EC=1.2, ng=0.3, ncut=30)
+
+# Returns Hamiltonian in the charge basis.If True, the energy eigenspectrum is computed
+scHamiltonian(Transmon=transmon,para=False)
+
+# Calculates eigenvalues using scipy.linalg.eigh, returns numpy array of eigenvalues
+scEigenvals(Transmon=transmon, evalscount=6, file=None, returnspectrumdata=False)
+
+# Calculates eigenvalues and corresponding eigenvectors using scipy.linalg.eigh. Returns two numpy arrays containing the eigenvalues and eigenvectors, respectively
+scEigensys(Transmon=transmon, evalscount=6, file=None, returnspectrumdata =False)
+
+# Calculates eigenvalues/eigenstates for a varying system parameter, given an array of parameter values
+scGet_spectrum_vs_paramvals(Transmon=transmon, param_name='EJ', param_vals=[30,30.1,30.2], evalscount=6, subtractground=False, geteigenstates=False, file=None, numcpus=None)
+
+# Return the transmon wave function in number basis
+scNumberbasis_wavefunction(Transmon=transmon, para=None, whichnum=0)
+
+# Return the transmon wave function in phase basis
+scWavefunction(Transmon=transmon, para=None, whichnum=0, phigrid=None)
+
+# Plots transmon wave function in charge basis
+scPlot_n_wavefunction(Transmon=transmon, para=None, smode='real', whichnum=0, n_range=None)
+
+# Alias for plot_wavefunction
+scPlot_phi_wavefunction(Transmon=transmon, para=None, whichnum=0, phogrid=None, smod='abs_sqr', caling=None)
+
+# Returns charge operator n in the charge or eigenenergy basis
+scN_operator(Transmon=transmon, para=False)
+
+# Returns operator exp_i_phi in the charge or eigenenergy basis
+scExp_i_phi_operator(Transmon=transmon, para=False)
+
+# Returns operator cos phi in the charge or eigenenergy basis
+scCos_phi_operator(Transmon=transmon, para=False)
+
+# Returns operator sin phi in the charge or eigenenergy basis
+scSin_phi_operator(Transmon=transmon, para=False)
+
+# Returns table of matrix elements for operator with respect to the eigenstates of the qubit
+scMatrixelement_table(Transmon=transmon, op='n_operator', evec=None, evalscount=6, file=None, returndatastore=False)
+
+# Plots matrix elements for operator
+scPlot_matrixelements(Transmon=transmon, op='n_operator', evec=None, evalscount=6, smode='abs', shownumbers=False, s3d=True)
+
+# Calculates matrix elements for a varying system parameter, given an array of parameter values
+scGet_matelements_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], evalscount=6, numcpus=None)
+
+# Generates a simple plot of a set of eigenvalues as a function of one parameter
+scPlot_matelem_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], selectelems=4, smode='abs', numcpus=None)
+
+# Show plots of coherence for various channels supported by the qubit as they vary as a function of a changing parameter
+scPlot_coherence_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
+commonnoiseoptions=None, spectrumdata=None, scale1=1, numcpus=None)
+
+# Plot effective T1 coherence time (rate) as a function of changing parameter
+scPlot_t1_effective_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
+commonnoiseoptions=None, spectrumdata=None, getrate=None, scale1=1, numcpus=None)
+
+# Plot effective T2 coherence time (rate) as a function of changing parameter
+scPlot_t2_effective_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
+commonnoiseoptions=None, spectrumdata=None, getrate=None, scale1=1, numcpus=None)
+
+# Calculate the transition time (or rate) using Fermi’s Golden Rule due to a noise channel with a spectral density spectral_density and system noise operator noise_op
+scT1(Transmon=transmon, i=0, j=1, noise_op, spectral_density=lorentzian_spectrum, t=0.015, total1=True, esys1=None, getrate=False)
+
+# T1 due to dielectric dissipation in the Josephson junction capacitances
+scT1_capacitive(Transmon=transmon, ii=1, jj=0, Qcap=None, t=0.015, total1=True, esys1=None, getrate=False, noiseop=None, branchparams=None)
+
+# Noise due to charge coupling to an impedance (such as a transmission line)
+scT1_charge_impedance(Transmon=transmon, ii=1, jj=0, zz=50, t=0.015, total1=True, esys1=None, getrate=False, noiseop=None)
+
+# Calculate the effective T1 time (or rate)
+scT1_effective(Transmon=transmon, noisechannels=None, commonnoiseoptions=None, esys1=None, getrate=False)
+
+# Calculate the effective T2 time (or rate)
+scT2_effective(Transmon=transmon, noisechannels=None, commonnoiseoptions=None, esys1=None, getrate=False)
+
+# Calculate the 1/f dephasing time (or rate) due to arbitrary noise source
+scTphi_1_over_f(Transmon=transmon, Anoise=1.0, ii=0, jj=1, noiseop, esys1=None, getrate=False)
+
+# Calculate the 1/f dephasing time (or rate) due to critical current noise
+scTphi_1_over_f_cc(Transmon=transmon, Anoise=1e-07, ii=0, jj=1, esys1=None, getrate=False)
+~~~
+
+
+
+## Device Mapping
+
+### Generate Qubits
 
 ```python
 # Manually generate a readout line
@@ -242,7 +413,7 @@ design.gds.generate_qubits_1(num: int,
                              dist: int = 2000,
                              geometric_options: Dict = Dict())
 ```
-## Generate Chip
+### Generate Chip
 
 ```python
 # Manually generate a chip
@@ -265,7 +436,7 @@ design.generate_chip(qubits=True, chip_name="chip0", height=20000, width=20000)
 
 design.copy_chip(old_chip_name="chip0", new_chip_name="chip1")
 ```
-## Generate Coupling Lines
+### Generate Coupling Lines
 ```python
 design.generate_coupling_lines(topology=True, qubits=True)
 design.generate_coupling_lines(topology=True, qubits=True, cpls_type="CouplingCavity")
@@ -274,7 +445,7 @@ design.generate_coupling_lines(topology=True, qubits=True, cpls_type="CouplingCa
 design.generate_coupling_lines_from_topo_and_qubits1(cpls_type="CouplingLineStraight",
                                                      chip_name="chip0")
 ```
-## Generate Readout Lines
+### Generate Readout Lines
 ```python
 # Generate readout cavity based on the existing qubits
 design.generate_readout_lines(qubits=True)
@@ -326,17 +497,20 @@ options = Dict(
 )
 design.generate_readout_lines(qubits=True, rdls_type="ReadoutCavityPlus", chip_name="chip0", geometric_options=options)
 ```
-## Generate Control Lines
+### Generate Control Lines
 ```python
 # Manually generate a control line
 design.control_lines.add(name="ctl0", type="ChargeLine")
 ```
-## Generate Transmission Lines
+### Generate Transmission Lines
 ```python
 # Manually generate a transmission line
 design.transmission_lines.add(name="tml0", type="TransmissionPath")
 ```
 ## Auto Routing
+
+### Auto Routing
+
 ```python
 # Automatically route to generate transmission lines (only applicable under certain conditions)
 design.routing(method="Control_off_chip_routing")
@@ -354,91 +528,6 @@ design.routing(method="Flipchip_routing",
                pins_type="LaunchPad",
                tmls_type="TransmissionPath")
 ```
-## Simulation
-```python
-# Perform capacitance simulation for Xmon-type qubits in a flip-chip structure
-design.simulation(sim_module="Flipchip_Xmon", ctl_name="control_lines_0", q_name="q0")
-
-# Perform capacitance simulation for Xmon-type qubits in a flip-chip structure and specify the path to save the capacitance matrix
-design.simulation(sim_module="Flipchip_Xmon", ctl_name="control_lines_0", q_name="q0", path="./results.txt")
-
-# Perform capacitance simulation for Xmon-type qubits in a planar structure
-design.simulation(sim_module="PlaneXmonSim", qubit_name="q0")
-
-# Perform capacitance simulation for Transmon-type qubits
-design.simulation(sim_module="TransmonSim", frequency=5.6, qubit_name="q0")
-
-# Perform capacitance simulation for Transmon-type qubits and specify the path to save the capacitance matrix
-design.simulation(sim_module="TransmonSim", frequency=5.6, qubit_name="q0", path="./results.txt")
-```
-
-## Modify The Gds Layout
-```python
-# Only the usage of manipulating qubits is listed here, other types of components are similar to use
-
-# Calculate the general parameters of the component framework
-design.gds.qubits.calc_general_ops()
-# Move every components
-design.gds.qubits.move(pos_name="gds_pos", dx=-200, dy=500)
-# Modifies the value of a single option
-design.gds.qubits.change_option(op_name="width", op_value="800")
-# Modifies the values of multiple options
-options = Dict(
-    cpw_width=[15]*6,
-    cpw_extend=[80]*6,
-    width=600,
-    height=300,
-    gap=10,
-)
-design.gds.qubits.change_options(new_options=options)
-# Add a new component
-options = Dict(
-    name = "q0",
-    type = "Transmon",
-    gds_pos = (0, 0),
-    topo_pos = (0, 0),
-    chip = "chip0",
-)
-design.gds.qubits.add(options=options)
-# Copy a specified component
-design.gds.qubits.copy_component(old_name="q0", new_name="q1")
-# Generate a row of components
-design.gds.qubits.generate_row(start_pos=(0, 0),
-                               dist=2000,
-                               key="gds_pos",
-                               num="10",
-                               pre_name="qubits_row_",
-                               type="Transmon",
-                               geometric_options=None)
-# Batch generate components
-design.gds.qubits.batch_generate(pos_list=[(0, 0), (2000, 0)],
-                                 key="gds_pos",
-                                 pre_name="qubits_batch_",
-                                 type="Transmon",
-                                 geometric_options=None)
-# Batch modify component options
-design.gds.qubits.batch_change(name_list=["q0", "q1"],
-                               op_name="type",
-                               op_value="Xmon")
-# Fast add components
-op0 = Dict(
-    name = "q0",
-    type = "Transmon",
-    gds_pos = (0, 0),
-    topo_pos = (0, 0),
-    chip = "chip0",
-)
-op1 = Dict(
-    name = "q1",
-    type = "Transmon",
-    gds_pos = (2000, 0),
-    topo_pos = (1, 0),
-    chip = "chip0",
-)
-options_list = [op0, op1]
-design.gds.qubits.batch_add(options_list=options_list)
-```
-
 ### Add Air Bridges
 
 ```python
@@ -463,11 +552,6 @@ design.gds.auto_generate_air_bridge3(line_type="control_lines",
 design.gds.optimize_air_bridges_layout()
 ```
 
-## Calculation of physical parameters
-```python
-# calculate qubit parameters
-toolbox.caculate_qubits_parms(f_q=65, Ec=30)
-```
 ### Add Tunnel Bridges
 
 ```python
@@ -496,94 +580,29 @@ design.gds.auto_add_tunnel_bridges(line_type="control_lines",
                                      tunnel_bridge_type="CoverBridge")
 ```
 
-## scqubits
-```python
-# Initialize a transmon qubit
-scTransmon(EJ=30, EC=1.2, ng=0.3, ncut=30)
+## simulation
 
-# Returns Hamiltonian in the charge basis.If True, the energy eigenspectrum is computed
-scHamiltonian(Transmon=transmon,para=False)
+### simulation
 
-# Calculates eigenvalues using scipy.linalg.eigh, returns numpy array of eigenvalues
-scEigenvals(Transmon=transmon, evalscount=6, file=None, returnspectrumdata=False)
+```
+# Perform capacitance simulation for Xmon-type qubits in a flip-chip structure
+design.simulation(sim_module="Flipchip_Xmon", ctl_name="control_lines_0", q_name="q0")
 
-# Calculates eigenvalues and corresponding eigenvectors using scipy.linalg.eigh. Returns two numpy arrays containing the eigenvalues and eigenvectors, respectively
-scEigensys(Transmon=transmon, evalscount=6, file=None, returnspectrumdata =False)
+# Perform capacitance simulation for Xmon-type qubits in a flip-chip structure and specify the path to save the capacitance matrix
+design.simulation(sim_module="Flipchip_Xmon", ctl_name="control_lines_0", q_name="q0", path="./results.txt")
 
-# Calculates eigenvalues/eigenstates for a varying system parameter, given an array of parameter values
-scGet_spectrum_vs_paramvals(Transmon=transmon, param_name='EJ', param_vals=[30,30.1,30.2], evalscount=6, subtractground=False, geteigenstates=False, file=None, numcpus=None)
+# Perform capacitance simulation for Xmon-type qubits in a planar structure
+design.simulation(sim_module="PlaneXmonSim", qubit_name="q0")
 
-# Return the transmon wave function in number basis
-scNumberbasis_wavefunction(Transmon=transmon, para=None, whichnum=0)
+# Perform capacitance simulation for Transmon-type qubits
+design.simulation(sim_module="TransmonSim", frequency=5.6, qubit_name="q0")
 
-# Return the transmon wave function in phase basis
-scWavefunction(Transmon=transmon, para=None, whichnum=0, phigrid=None)
-
-# Plots transmon wave function in charge basis
-scPlot_n_wavefunction(Transmon=transmon, para=None, smode='real', whichnum=0, n_range=None)
-
-# Alias for plot_wavefunction
-scPlot_phi_wavefunction(Transmon=transmon, para=None, whichnum=0, phogrid=None, smod='abs_sqr', caling=None)
-
-# Returns charge operator n in the charge or eigenenergy basis
-scN_operator(Transmon=transmon, para=False)
-
-# Returns operator exp_i_phi in the charge or eigenenergy basis
-scExp_i_phi_operator(Transmon=transmon, para=False)
-
-# Returns operator cos phi in the charge or eigenenergy basis
-scCos_phi_operator(Transmon=transmon, para=False)
-
-# Returns operator sin phi in the charge or eigenenergy basis
-scSin_phi_operator(Transmon=transmon, para=False)
-
-# Returns table of matrix elements for operator with respect to the eigenstates of the qubit
-scMatrixelement_table(Transmon=transmon, op='n_operator', evec=None, evalscount=6, file=None, returndatastore=False)
-
-# Plots matrix elements for operator
-scPlot_matrixelements(Transmon=transmon, op='n_operator', evec=None, evalscount=6, smode='abs', shownumbers=False, s3d=True)
-
-# Calculates matrix elements for a varying system parameter, given an array of parameter values
-scGet_matelements_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], evalscount=6, numcpus=None)
-
-# Generates a simple plot of a set of eigenvalues as a function of one parameter
-scPlot_matelem_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], selectelems=4, smode='abs', numcpus=None)
-
-# Show plots of coherence for various channels supported by the qubit as they vary as a function of a changing parameter
-scPlot_coherence_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
-commonnoiseoptions=None, spectrumdata=None, scale1=1, numcpus=None)
-
-# Plot effective T1 coherence time (rate) as a function of changing parameter
-scPlot_t1_effective_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
-commonnoiseoptions=None, spectrumdata=None, getrate=None, scale1=1, numcpus=None)
-
-# Plot effective T2 coherence time (rate) as a function of changing parameter
-scPlot_t2_effective_vs_paramvals(Transmon=transmon, op='n_operator', paramname='EJ', paramvals=[30,30.1,30.2], noisechannels=None, 
-commonnoiseoptions=None, spectrumdata=None, getrate=None, scale1=1, numcpus=None)
-
-# Calculate the transition time (or rate) using Fermi’s Golden Rule due to a noise channel with a spectral density spectral_density and system noise operator noise_op
-scT1(Transmon=transmon, i=0, j=1, noise_op, spectral_density=lorentzian_spectrum, t=0.015, total1=True, esys1=None, getrate=False)
-
-# T1 due to dielectric dissipation in the Josephson junction capacitances
-scT1_capacitive(Transmon=transmon, ii=1, jj=0, Qcap=None, t=0.015, total1=True, esys1=None, getrate=False, noiseop=None, branchparams=None)
-
-# Noise due to charge coupling to an impedance (such as a transmission line)
-scT1_charge_impedance(Transmon=transmon, ii=1, jj=0, zz=50, t=0.015, total1=True, esys1=None, getrate=False, noiseop=None)
-
-# Calculate the effective T1 time (or rate)
-scT1_effective(Transmon=transmon, noisechannels=None, commonnoiseoptions=None, esys1=None, getrate=False)
-
-# Calculate the effective T2 time (or rate)
-scT2_effective(Transmon=transmon, noisechannels=None, commonnoiseoptions=None, esys1=None, getrate=False)
-
-# Calculate the 1/f dephasing time (or rate) due to arbitrary noise source
-scTphi_1_over_f(Transmon=transmon, Anoise=1.0, ii=0, jj=1, noiseop, esys1=None, getrate=False)
-
-# Calculate the 1/f dephasing time (or rate) due to critical current noise
-scTphi_1_over_f_cc(Transmon=transmon, Anoise=1e-07, ii=0, jj=1, esys1=None, getrate=False)
+# Perform capacitance simulation for Transmon-type qubits and specify the path to save the capacitance matrix
+design.simulation(sim_module="TransmonSim", frequency=5.6, qubit_name="q0", path="./results.txt")
 ```
 
-## hfss
+### hfss
+
 ```python
 #eigenmode simulation (import gds file. optional : thickness , basic_material , region_material)
 from hfss.eigenmode import eigenmode 

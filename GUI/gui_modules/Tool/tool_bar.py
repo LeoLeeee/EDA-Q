@@ -1,6 +1,7 @@
 # state_manager.py
 import os
 import sys
+import multiprocessing
 
 from GUI.gui_modules.Tool.Widget.EquCir_Capacitance import DialogQubitCapacitance
 from GUI.gui_modules.Tool.Widget.EquCir_CpCapitance import DialogCouplingCapacitance
@@ -23,6 +24,18 @@ from PyQt5.QtGui import QIcon
 from api.design import Design
 from PyQt5.QtWidgets import QMessageBox  # Import QMessageBox for pop-up windows  
 from GUI.gui_modules.Global.global_state import global_state  # Import global state management singleton
+
+from renderer.hfss.eigenmode import eigenmode 
+from renderer.q3d.capative import capacitance
+
+def worker1(option_name , file_path):
+    if option_name == 'Hfss':
+        ei = eigenmode()
+        ei.run_eigenmode_simulation_from_gds(file_path) #文件名
+    elif option_name == 'Q3d':
+        ei = capacitance()
+        ei.run_q3d_extraction_from_gds(file_path)
+
 
 # Import all dialog classes (keep original)
 from GUI.gui_modules.Tool.Widget.Widget_chiplayer import Dialog_ChipLayer
@@ -72,6 +85,7 @@ class ToolBarManager(QToolBar):
             ("Modify GDS", "GDS"),
             ("Simulation", "Simulation"),
             ("Others", "Others"),
+            ("Renderer" , "Renderer"),
             ("Clear", "Clear"),
         ]
 
@@ -111,6 +125,14 @@ class ToolBarManager(QToolBar):
                     menu_action.triggered.connect(lambda checked, name=option_name: self.handle_simulation_option(name))
                 action.setMenu(menu)
                 self.addAction(action)
+            elif object_name == "Renderer":
+                menu = QMenu(self)
+                simulation_options = ["Hfss", "Q3d"]
+                for option_name in simulation_options:
+                    menu_action = menu.addAction(option_name)
+                    menu_action.triggered.connect(lambda checked, name=option_name: self.handle_renderer_option(name))
+                action.setMenu(menu)
+                self.addAction(action)
             elif object_name == "Circuit":
                 menu = QMenu(self)
                 circuit_options = ["Generate Equivalent Circuit", "Modify Qubit Capacitance",
@@ -140,6 +162,7 @@ class ToolBarManager(QToolBar):
         try:
             if action_name == 'Algorithm':
                 self.select_file()
+
             elif action_name == 'Circuit':
                 print("Performing equivalent circuit construction operation")
                 if not current_design.topology.positions:
@@ -293,6 +316,25 @@ class ToolBarManager(QToolBar):
             except KeyError:
                 print("Unable to update design")
 
+    def handle_renderer_option(self, option_name):
+        if current_design := self.get_current_design():
+            try:
+                if option_name == "Hfss" or option_name == "Q3d" :
+                    '''                    self.parent.xmon_dialog = Dialog_Xmon(design=current_design)
+                    self.parent.xmon_dialog.designUpdated.connect(
+                        lambda d: global_state.update_design(global_state.get_current_design_name(), d)
+                    )
+                    self.parent.xmon_dialog.exec_()'''
+                    self.select_file_renderer(option_name)
+                elif option_name == "Readout":
+                    self.parent.readout_dialog = Dialog_s21(design=current_design)
+                    self.parent.readout_dialog.designUpdated.connect(
+                        lambda d: global_state.update_design(global_state.get_current_design_name(), d)
+                    )
+                    self.parent.readout_dialog.exec_()
+            except KeyError:
+                print("Unable to update design")
+
     def handle_circuit_option(self, option_name):
         """Process circuit parameter modification operations(Integrated dialog box version)"""
         if current_design := self.get_current_design():
@@ -352,6 +394,25 @@ class ToolBarManager(QToolBar):
                     Import_design = Design(qasm_path=file_path)
                     global_state.update_design(design_name, Import_design)
                     # self.parent.display_area.show_topo_image('./picture/topology.png')
+                except ValueError as e:
+                    print(f"Import failed: {str(e)}")
+                except Exception as e:
+                    print(f"Unknown error: {str(e)}")
+
+
+    def select_file_renderer(self , option_name):
+        """File selection logic (using GlobalState API)"""
+        fileDialog = QFileDialog(self.parent)
+        fileDialog.setWindowTitle('Select GDS File')
+        fileDialog.setFileMode(QFileDialog.ExistingFiles)
+        fileDialog.setNameFilter("GDS Files (*.gds);;All Files (*)")
+
+        if fileDialog.exec_() == QFileDialog.Accepted:
+            if file_paths := fileDialog.selectedFiles():
+                file_path = file_paths[0]
+                try:
+                    p = multiprocessing.Process(target = worker1, args=(option_name, file_path))
+                    p.start()
                 except ValueError as e:
                     print(f"Import failed: {str(e)}")
                 except Exception as e:
