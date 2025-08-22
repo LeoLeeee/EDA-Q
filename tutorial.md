@@ -24,8 +24,8 @@ This tutorial introduces the usage of EDA-Q.
 - [Generate Readout Lines](#generate-readout-lines)
 - [Generate Control Lines](#generate-control-lines)
 - [Generate Transmission Lines](#generate-transmission-lines)
-- [Add Air Bridges](#add-air-bridges)
-- [Add Tunnel Bridges](#add-tunnel-bridges)
+- [Generate Air Bridges](#generate-air-bridges)
+- [Generate Tunnel Bridges](#generate-tunnel-bridges)
 
 ### 自动化布局布线 (Auto Routing)
 
@@ -507,28 +507,7 @@ design.control_lines.add(name="ctl0", type="ChargeLine")
 # Manually generate a transmission line
 design.transmission_lines.add(name="tml0", type="TransmissionPath")
 ```
-## Auto Routing
-
-### Auto Routing
-
-```python
-# Automatically route to generate transmission lines (only applicable under certain conditions)
-design.routing(method="Control_off_chip_routing")
-
-# Automatically route to generate transmission lines and specify the chip where they are located (only applicable under certain conditions)
-design.routing(method="Control_off_chip_routing", chip_name="chip0")
-
-# Automatically arrange control lines and pins using IBM flip-chip method
-design.routing(method="Flipchip_routing_IBM", chip_name="chip1", ctls_type="ControlLineCircle1")
-
-# Automatically arrange transmission lines, control lines, and pins using flip-chip method
-design.routing(method="Flipchip_routing",
-               chip_name="chip1",
-               ctls_type="ChargeLine",
-               pins_type="LaunchPad",
-               tmls_type="TransmissionPath")
-```
-### Add Air Bridges
+### Generate Air Bridges
 
 ```python
 #define an air_bridge
@@ -552,7 +531,7 @@ design.gds.auto_generate_air_bridge3(line_type="control_lines",
 design.gds.optimize_air_bridges_layout()
 ```
 
-### Add Tunnel Bridges
+### Generate Tunnel Bridges
 
 ```python
 #define an air_bridge
@@ -580,6 +559,27 @@ design.gds.auto_add_tunnel_bridges(line_type="control_lines",
                                      tunnel_bridge_type="CoverBridge")
 ```
 
+## Auto Routing
+
+### Auto Routing
+
+```python
+# Automatically route to generate transmission lines (only applicable under certain conditions)
+design.routing(method="Control_off_chip_routing")
+
+# Automatically route to generate transmission lines and specify the chip where they are located (only applicable under certain conditions)
+design.routing(method="Control_off_chip_routing", chip_name="chip0")
+
+# Automatically arrange control lines and pins using IBM flip-chip method
+design.routing(method="Flipchip_routing_IBM", chip_name="chip1", ctls_type="ControlLineCircle1")
+
+# Automatically arrange transmission lines, control lines, and pins using flip-chip method
+design.routing(method="Flipchip_routing",
+               chip_name="chip1",
+               ctls_type="ChargeLine",
+               pins_type="LaunchPad",
+               tmls_type="TransmissionPath")
+```
 ## simulation
 
 ### qubit
