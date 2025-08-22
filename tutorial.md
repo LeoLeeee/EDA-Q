@@ -24,16 +24,16 @@ This tutorial introduces the usage of EDA-Q.
 - [Generate Readout Lines](#generate-readout-lines)
 - [Generate Control Lines](#generate-control-lines)
 - [Generate Transmission Lines](#generate-transmission-lines)
+- [Add Air Bridges](#add-air-bridges)
+- [Add Tunnel Bridges](#add-tunnel-bridges)
 
 ### 自动化布局布线 (Auto Routing)
 
 - [Auto Routing](#auto-routing)
-- [Add Air Bridges](#add-air-bridges)
-- [Add Tunnel Bridges](#add-tunnel-bridges)
 
 ### 仿真验证 (Simulation)
 
-- [Simulation](#simulation)
+- [qubit](#qubit)
 - [HFSS](#hfss)
 - [Q3D](#q3d)
 
@@ -582,7 +582,7 @@ design.gds.auto_add_tunnel_bridges(line_type="control_lines",
 
 ## simulation
 
-### simulation
+### qubit
 
 ```
 # Perform capacitance simulation for Xmon-type qubits in a flip-chip structure
