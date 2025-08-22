@@ -323,8 +323,6 @@ scTphi_1_over_f(Transmon=transmon, Anoise=1.0, ii=0, jj=1, noiseop, esys1=None, 
 scTphi_1_over_f_cc(Transmon=transmon, Anoise=1e-07, ii=0, jj=1, esys1=None, getrate=False)
 ~~~
 
-
-
 ## Device Mapping
 
 ### Generate Qubits
@@ -584,7 +582,7 @@ design.routing(method="Flipchip_routing",
 
 ### qubit
 
-```
+```python
 # Perform capacitance simulation for Xmon-type qubits in a flip-chip structure
 design.simulation(sim_module="Flipchip_Xmon", ctl_name="control_lines_0", q_name="q0")
 
