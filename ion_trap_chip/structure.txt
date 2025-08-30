@@ -1,0 +1,23 @@
+ion_trap_chip/
+├── main.py
+├── config/
+│   ├── __init__.py
+│   └── chip_parameters.py
+├── core/
+│   ├── __init__.py
+│   ├── coordinate_system.py
+│   ├── geometry/
+│   │   ├── __init__.py
+│   │   ├── base_shapes.py
+│   │   ├── cavities.py
+│   │   └── electrodes.py
+│   ├── routing/
+│   │   ├── __init__.py
+│   │   ├── path_calculator.py
+│   │   └── groove_generator.py
+│   └── chip_builder.py
+├── utils/
+│   ├── __init__.py
+│   ├── visualization.py
+│   └── export.py
+└── requirements.txt

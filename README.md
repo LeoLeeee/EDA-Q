@@ -1,8 +1,8 @@
-# EDA-Q v0.10.2
+# EDA-Q v1.0.0
 
 [![](https://img.shields.io/badge/homepage-EDA_Q-orange)](https://github.com/Q-transmon-xmon/EDA-Q)
 
-EDA-Q is an advanced automated design tool for superconducting quantum chips, aimed at providing comprehensive support for the full design process of quantum chips in the quantum computing field. It integrates core features such as quantum chip topology design, equivalent circuit computation, GDS layout and routing, and simulation, helping researchers and engineers efficiently design and optimize superconducting qubit chips.
+EDA-Q is an advanced automated design tool for quantum chips (Simultaneous support for both superconducting and ion trap chip design is provided. For details on the ion trap chip design method, please refer to the README of ion_trap_chip), aimed at providing comprehensive support for the full design process of quantum chips in the quantum computing field. It integrates core features such as quantum chip topology design, equivalent circuit computation, GDS layout and routing, and simulation, helping researchers and engineers efficiently design and optimize  qubit chips.
 
 ## Directory
 
@@ -15,10 +15,10 @@ EDA-Q is an advanced automated design tool for superconducting quantum chips, ai
 ## Background
 
 
-With the rapid development of quantum computing technology, the design and optimization of quantum chips have become critical aspects of quantum hardware research. Among various approaches, superconducting qubit technology has emerged as a leading solution for realizing quantum computation due to its high fidelity and scalability. However, the design process for superconducting quantum chips is highly complex and challenging, as it involves numerous physical constraints, engineering limitations, and precise layout optimizations. These factors make traditional design methods inadequate to meet the demands of modern quantum chip development.
+With the rapid development of quantum computing technology, the design and optimization of quantum chips have become critical aspects of quantum hardware research. Among various approaches,  qubit technology has emerged as a leading solution for realizing quantum computation due to its high fidelity and scalability. However, the design process for  quantum chips is highly complex and challenging, as it involves numerous physical constraints, engineering limitations, and precise layout optimizations. These factors make traditional design methods inadequate to meet the demands of modern quantum chip development.
 
 
-Although some design tools for superconducting quantum chips have been developed, they generally suffer from limitations such as a lack of comprehensive support for all design stages and insufficient automation in the design process. These tools fail to fully meet the demands of superconducting quantum chip design, particularly in the context of large-scale quantum chips, where efficient and scalable solutions remain unavailable.
+Although some design tools for quantum chips have been developed, they generally suffer from limitations such as a lack of comprehensive support for all design stages and insufficient automation in the design process. These tools fail to fully meet the demands of  quantum chip design, particularly in the context of large-scale quantum chips, where efficient and scalable solutions remain unavailable.
 
 
 To address this, we have developed EDA-Q, an integrated platform that enables full-process automation for quantum chip design. By incorporating a range of core functionalities, EDA-Q facilitates the entire workflow, from topology design to simulation and verification, significantly improving design efficiency. Its objective is to provide a robust foundational design platform to support the engineering implementation of quantum computing hardware, thereby accelerating technological breakthroughs and the industrialization of quantum computing.
