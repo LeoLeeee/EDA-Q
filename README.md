@@ -39,7 +39,7 @@ To simplify the installation process of the **EDA-Q** tool, we provide a pre-con
 2. **Clone project warehouse**  
    Use Git to clone **EDA-Q** s project repository locally:
    ```bash+
-   git clone https://github.com/Tianyan-QEDA/EDA-Q.git
+   git clone [https://github.com/Tianyan-QEDA/EDA-Q.git](https://github.com/LeoLeeee/EDA-Q/)
    cd <EDA-Q Project directory>
    ```
 
